@@ -9,9 +9,9 @@
  * Michele Sanseviero
  * Wilsen Hernández
  * */
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 typedef struct {
     int dimensionMatriz;
@@ -21,11 +21,9 @@ typedef struct {
     double *vectorB, *vectorX, *vectorXInicial;
 } Jacobi;
 
-
-
-void jcobi(Jacobi J);
+void jacobiIterativo(Jacobi J);
 double sumatoria(Jacobi J,int i);
-int comprobar(Jacobi J);
+double normaVector(Jacobi J);
 
 int main(int argc, char** argv)
 {
@@ -67,78 +65,78 @@ int main(int argc, char** argv)
     {
         scanf(" %lf", &jacobi.vectorB[i]);
     }
-	jcobi(jacobi);
+
+    jacobiIterativo(jacobi);
 
     return 0;
 }
 
-
-void jcobi(Jacobi J)
+void jacobiIterativo(Jacobi J)
 {
+    int band = 0;
+    int k = 0;
 
-	int i,j,k,band;
-	k = 0;
-	band = 0;
+    while (k < J.maximoIteraciones)
+    {
+        for(int i = 0; i < J.dimensionMatriz;i++)
+        {
+            J.vectorX[i] = (1 / J.matrizA[i][i]) * (-1 * sumatoria(J,i) + J.vectorB[i]);
+        }
 
-	for(k = 0; k < J.maximoIteraciones && !band;k++)
-	{
-		for(i = 0; i < J.dimensionMatriz;i++)
-		{
-			J.vectorX[i] = (sumatoria(J,i) + J.vectorB[j]) / J.matrizA[i][i];
-		}
+        if (normaVector(J) < J.tolerancia)
+        {
+            break;
+        }
 
-		band = comprobar(J);
+        for(int j = 0; j < J.dimensionMatriz; j++)
+        {
+            J.vectorXInicial[j] = J.vectorX[j];
+        }
 
-		for(j = 0;j < J.dimensionMatriz ; j++)
-		{
-			J.vectorXInicial[j] = J.vectorX[j];
-		}
+        printf("%2d", k);
 
-	}
-	if(band)
-	{
-		printf("Solucion encontrada");
-	}
-	else
-	{
-		printf("se excedio de el numero de iteraciones");
-	}
+        for (int j = 0; j < J.dimensionMatriz; j++)
+        {
+            printf(" %f", J.vectorX[j]);
+        }
+        printf("\n");
+
+        k++;
+    }
+
+    if (k <= J.maximoIteraciones)
+    {
+        printf("Solucion encontrada en %d iteraciones\n", k);
+    }
+    else
+    {
+        printf("Se excedio de el numero de iteraciones\n");
+    }
 
 }
 
 
-double sumatoria(Jacobi J,int i)
+double sumatoria(Jacobi J, int i)
 {
-	int j;
-	double total;
+    double total = 0e0;
 
-	total = 0e0;
-
-	for(j = 0; j < J.maximoIteraciones;j++)
-	{
-		if(j != i)
-		{
-			total = total + (J.matrizA[i][j] * J.vectorXInicial[j]);
-		}
-	}
-	return(total * -1);
+    for (int j = 0; j < J.maximoIteraciones; j++)
+    {
+        if (j != i)
+        {
+            total = total + (J.matrizA[i][j] * J.vectorXInicial[j]);
+        }
+    }
+    return total;
 }
 
-int comprobar(Jacobi J)
+double normaVector(Jacobi J)
 {
-	int i,band,k;
-	band = 0;
-	k = 0;
-	for(i = 0; i < J.dimensionMatriz;i++)
-	{
-		if(fabs(J.vectorX[i]-J.vectorXInicial[i]) < J.tolerancia)
-		{
-			k++;
-		}
-	}
-	if(k == i-1)
-	{
-		band = 1;
-	}
-	return(band);
+    double sum = 0e0;
+    for (int i = 0; i < J.dimensionMatriz; i++)
+    {
+        sum = sum + pow(J.vectorX[i] - J.vectorXInicial[i], 2);
+    }
+
+    return sqrt(sum);
 }
