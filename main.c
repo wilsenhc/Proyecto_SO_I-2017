@@ -11,18 +11,13 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-<<<<<<< HEAD
-#include <math.h>
-#define N 4
-=======
->>>>>>> f2d3ea31f5169bab118d560c371008ebd3ef6a3e
 
 typedef struct {
     int dimensionMatriz;
     int maximoIteraciones;
     double tolerancia;
-    double matrizA[N][N];
-    double vectorB[N], vectorX[N], vectorXInicial[N];
+    double **matrizA;
+    double *vectorB, *vectorX, *vectorXInicial;
 } Jacobi;
 
 void jacobiIterativo(Jacobi J);
@@ -38,17 +33,17 @@ int main(int argc, char** argv)
      * */
     scanf(" %d", &jacobi.dimensionMatriz);
 
-    //jacobi.matrizA = (double**) calloc(jacobi.dimensionMatriz, sizeof(double*));
+    jacobi.matrizA = (double**) calloc(jacobi.dimensionMatriz, sizeof(double*));
 
-    //for (int i = 0; i < jacobi.dimensionMatriz; i++)
+    for (int i = 0; i < jacobi.dimensionMatriz; i++)
     {
-    //    jacobi.matrizA[i] = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
+        jacobi.matrizA[i] = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
     }
 
-   /* jacobi.vectorB = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
+    jacobi.vectorB = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
     jacobi.vectorX = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
     jacobi.vectorXInicial = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
-*/
+
     scanf(" %lf", &jacobi.tolerancia);
     scanf(" %d", &jacobi.maximoIteraciones);
 
