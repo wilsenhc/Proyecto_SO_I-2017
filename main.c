@@ -12,13 +12,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#define N 4
 
 typedef struct {
     int dimensionMatriz;
     int maximoIteraciones;
     double tolerancia;
-    double **matrizA;
-    double *vectorB, *vectorX, *vectorXInicial;
+    double matrizA[N][N];
+    double vectorB[N], vectorX[N], vectorXInicial[N];
 } Jacobi;
 
 
@@ -36,17 +37,17 @@ int main(int argc, char** argv)
      * */
     scanf(" %d", &jacobi.dimensionMatriz);
 
-    jacobi.matrizA = (double**) calloc(jacobi.dimensionMatriz, sizeof(double*));
+    //jacobi.matrizA = (double**) calloc(jacobi.dimensionMatriz, sizeof(double*));
 
-    for (int i = 0; i < jacobi.dimensionMatriz; i++)
+    //for (int i = 0; i < jacobi.dimensionMatriz; i++)
     {
-        jacobi.matrizA[i] = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
+    //    jacobi.matrizA[i] = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
     }
 
-    jacobi.vectorB = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
+   /* jacobi.vectorB = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
     jacobi.vectorX = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
     jacobi.vectorXInicial = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
-
+*/
     scanf(" %lf", &jacobi.tolerancia);
     scanf(" %d", &jacobi.maximoIteraciones);
 
