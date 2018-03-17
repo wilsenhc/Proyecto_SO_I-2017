@@ -12,98 +12,88 @@
 #include <stdlib.h>
 #include <math.h>
 
-typedef struct {
+struct {
     int dimensionMatriz;
     int maximoIteraciones;
     double tolerancia;
     double **matrizA;
     double *vectorB, *vectorX, *vectorXInicial;
-} Jacobi;
+} JACOBI;
 
-void jacobiIterativo(Jacobi J);
-double sumatoria(Jacobi J,int i);
-double normaVector(Jacobi J);
-
-int main(int argc, char** argv)
+/**
+ * Lectura de archivo de entrada
+ * */
+void lecturaJacobi()
 {
-    Jacobi jacobi;
+    scanf(" %d", &JACOBI.dimensionMatriz);
 
-    /**
-     * Lectura de archivo de entrada
-     * */
-    scanf(" %d", &jacobi.dimensionMatriz);
+    JACOBI.matrizA = (double**) calloc(JACOBI.dimensionMatriz, sizeof(double*));
 
-    jacobi.matrizA = (double**) calloc(jacobi.dimensionMatriz, sizeof(double*));
-
-    for (int i = 0; i < jacobi.dimensionMatriz; i++)
+    for (int i = 0; i < JACOBI.dimensionMatriz; i++)
     {
-        jacobi.matrizA[i] = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
+        JACOBI.matrizA[i] = (double*) calloc(JACOBI.dimensionMatriz, sizeof(double));
     }
 
-    jacobi.vectorB = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
-    jacobi.vectorX = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
-    jacobi.vectorXInicial = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
+    JACOBI.vectorB = (double*) calloc(JACOBI.dimensionMatriz, sizeof(double));
+    JACOBI.vectorX = (double*) calloc(JACOBI.dimensionMatriz, sizeof(double));
+    JACOBI.vectorXInicial = (double*) calloc(JACOBI.dimensionMatriz, sizeof(double));
 
-    scanf(" %lf", &jacobi.tolerancia);
-    scanf(" %d", &jacobi.maximoIteraciones);
+    scanf(" %lf", &JACOBI.tolerancia);
+    scanf(" %d", &JACOBI.maximoIteraciones);
 
-    for (int i = 0; i < jacobi.dimensionMatriz; i++)
+    for (int i = 0; i < JACOBI.dimensionMatriz; i++)
     {
-        scanf(" %lf", &jacobi.vectorXInicial[i]);
+        scanf(" %lf", &JACOBI.vectorXInicial[i]);
     }
 
-    for (int i = 0; i < jacobi.dimensionMatriz; i++)
+    for (int i = 0; i < JACOBI.dimensionMatriz; i++)
     {
-        for (int j = 0; j < jacobi.dimensionMatriz; j++)
+        for (int j = 0; j < JACOBI.dimensionMatriz; j++)
         {
-            scanf(" %lf", &jacobi.matrizA[i][j]);
+            scanf(" %lf", &JACOBI.matrizA[i][j]);
         }
     }
 
-    for (int i = 0; i < jacobi.dimensionMatriz; i++)
+    for (int i = 0; i < JACOBI.dimensionMatriz; i++)
     {
-        scanf(" %lf", &jacobi.vectorB[i]);
+        scanf(" %lf", &JACOBI.vectorB[i]);
     }
-
-    jacobiIterativo(jacobi);
-
-    return 0;
 }
 
-void jacobiIterativo(Jacobi J)
+void jacobiIterativo()
 {
     int band = 0;
     int k = 0;
 
-    while (k < J.maximoIteraciones)
+    while (k < JACOBI.maximoIteraciones)
     {
-        for(int i = 0; i < J.dimensionMatriz;i++)
+        for (int i = 0; i < JACOBI.dimensionMatriz; i++)
         {
-            J.vectorX[i] = (1 / J.matrizA[i][i]) * (-1 * sumatoria(J,i) + J.vectorB[i]);
+            JACOBI.vectorX[i] = (1 / JACOBI.matrizA[i][i]) * (-1 * sumatoria(i) + JACOBI.vectorB[i]);
         }
 
-        if (normaVector(J) < J.tolerancia)
+        if (normaVector() < JACOBI.tolerancia)
         {
             break;
         }
 
-        for(int j = 0; j < J.dimensionMatriz; j++)
+        for(int j = 0; j < JACOBI.dimensionMatriz; j++)
         {
-            J.vectorXInicial[j] = J.vectorX[j];
+            JACOBI.vectorXInicial[j] = JACOBI.vectorX[j];
         }
 
         printf("%2d", k);
 
-        for (int j = 0; j < J.dimensionMatriz; j++)
+        for (int j = 0; j < JACOBI.dimensionMatriz; j++)
         {
-            printf(" %f", J.vectorX[j]);
+            printf(" %f", JACOBI.vectorX[j]);
         }
         printf("\n");
 
         k++;
     }
 
-    if (k <= J.maximoIteraciones)
+    if (k <= JACOBI.maximoIteraciones)
     {
         printf("Solucion encontrada en %d iteraciones\n", k);
     }
@@ -115,27 +105,38 @@ void jacobiIterativo(Jacobi J)
 }
 
 
-double sumatoria(Jacobi J, int i)
+double sumatoria(int i)
 {
     double total = 0e0;
 
-    for (int j = 0; j < J.maximoIteraciones; j++)
+    for (int j = 0; j < JACOBI.maximoIteraciones; j++)
     {
         if (j != i)
         {
-            total = total + (J.matrizA[i][j] * J.vectorXInicial[j]);
+            total = total + (JACOBI.matrizA[i][j] * JACOBI.vectorXInicial[j]);
         }
     }
     return total;
 }
 
-double normaVector(Jacobi J)
+double normaVector()
 {
     double sum = 0e0;
-    for (int i = 0; i < J.dimensionMatriz; i++)
+    for (int i = 0; i < JACOBI.dimensionMatriz; i++)
     {
-        sum = sum + pow(J.vectorX[i] - J.vectorXInicial[i], 2);
+        sum = sum + pow(JACOBI.vectorX[i] - JACOBI.vectorXInicial[i], 2);
     }
 
     return sqrt(sum);
+}
+
+int main(int argc, char** argv)
+{
+
+    lecturaJacobi();
+
+
+    jacobiIterativo();
+
+    return 0;
 }
