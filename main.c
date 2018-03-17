@@ -76,7 +76,7 @@ void matriz_sup(int **matrz, int **matrz_sup, int N)
 {
 	int i,j;
 
-	for(i = 0;i < N ; i++;)
+	for(i = 0;i < N ; i++)
 	{
 		for(j = i+1;j < N ; j++)
 		{
@@ -94,7 +94,7 @@ void matriz_inf(int **matrz,int **matrz_inf,int N)
 {
 	int i,j;
 
-	for(i = 0;i < N ; i++;)
+	for(i = 0;i < N ; i++)
 	{
 		for(j = i+1;j < N ; j++)
 		{
@@ -113,7 +113,7 @@ void matriz_diag(int **matrz,int **matrz_diag,int N)
 
 	for(i = 0;j < N ; i++)
 	{
-		matrz_inf[i][i] = matrz[i][i];
+		matrz_diag[i][i] = matrz[i][i];
 	}
 }
 
