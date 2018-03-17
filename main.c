@@ -9,14 +9,15 @@
  * Wilsen Hernández
  * */
 #include <stdio.h>
+#include <stdlib.h>
 
-struct Jacobi {
+typedef struct {
     int dimensionMatriz;
     int maximoIteraciones;
     double tolerancia;
     double **matrizA;
     double *vectorB, *vectorX, *vectorXInicial;
-};
+} Jacobi;
 
 int main(int argc, char** argv)
 {
@@ -27,36 +28,36 @@ int main(int argc, char** argv)
      * */
     scanf(" %d", &jacobi.dimensionMatriz);
 
-    jacobi.matrizA = (double*) calloc(jacobi.dimensionMatriz, sizeof(double*));
+    jacobi.matrizA = (double**) calloc(jacobi.dimensionMatriz, sizeof(double*));
 
     for (int i = 0; i < jacobi.dimensionMatriz; i++)
     {
-        jacobi.matrizA[i] = (double) calloc(jacobi.dimensionMatriz, sizeof(double));
+        jacobi.matrizA[i] = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
     }
 
-    jacobi.vectorB = (double) calloc(jacobi.dimensionMatriz, sizeof(double));
-    jacobi.vectorX = (double) calloc(jacobi.dimensionMatriz, sizeof(double));
-    jacobi.vectorXInicial = (double) calloc(jacobi.dimensionMatriz, sizeof(double));
+    jacobi.vectorB = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
+    jacobi.vectorX = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
+    jacobi.vectorXInicial = (double*) calloc(jacobi.dimensionMatriz, sizeof(double));
 
-    scanf(" %f", &jacobi.tolerancia);
+    scanf(" %lf", &jacobi.tolerancia);
     scanf(" %d", &jacobi.maximoIteraciones);
 
     for (int i = 0; i < jacobi.dimensionMatriz; i++)
     {
-        scanf(" %f", &jacobi.vectorXInicial[i]);
+        scanf(" %lf", &jacobi.vectorXInicial[i]);
     }
 
     for (int i = 0; i < jacobi.dimensionMatriz; i++)
     {
         for (int j = 0; j < jacobi.dimensionMatriz; j++)
         {
-            scanf(" %f", &jacobi.matrizA[i][j]);
+            scanf(" %lf", &jacobi.matrizA[i][j]);
         }
     }
 
     for (int i = 0; i < jacobi.dimensionMatriz; i++)
     {
-        scanf(" %f", &jacobi.vectorB[i]);
+        scanf(" %lf", &jacobi.vectorB[i]);
     }
 
     return 0;
