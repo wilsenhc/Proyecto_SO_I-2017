@@ -1,4 +1,5 @@
 /**
+/**
  * Universidad de Carabobo
  * Facultad de Ciencias y Tecnología
  * Sistemas Operativos
@@ -83,7 +84,7 @@ void jcobi(Jacobi J)
 	{
 		for(i = 0; i < J.dimensionMatriz;i++)
 		{
-			J.vectorX[i] = sumatoria(J,i) / J.matrizA[i][i];
+			J.vectorX[i] = (sumatoria(J,i) + J.vectorB[j]) / J.matrizA[i][i];
 		}
 
 		band = comprobar(J);
@@ -117,7 +118,7 @@ double sumatoria(Jacobi J,int i)
 	{
 		if(j != i)
 		{
-			total = total + (J.matrizA[i][j] * J.vectorXInicial[j]) + J.vectorB[j];
+			total = total + (J.matrizA[i][j] * J.vectorXInicial[j]);
 		}
 	}
 	return(total * -1);
