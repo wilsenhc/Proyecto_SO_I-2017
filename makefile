@@ -5,7 +5,7 @@ entrada = in.txt
 salida = out.txt
 
 all:
-	$(compilador) -g $(MAIN) -o $(ejecutable) -lm
+	$(compilador) -g $(MAIN) -o $(ejecutable) -lm -l pthread
 run:
 	./$(ejecutable) < $(entrada)
 clean:
