@@ -200,6 +200,15 @@ void jacobiIterativo(int hilo)
         printf("Se excedio de el numero de iteraciones\n");
     }
 
+    free(JACOBI.vectorB);
+    free(JACOBI.vectorX);
+    free(JACOBI.vectorXInicial);
+    for(int i = 0; i < JACOBI.dimensionMatriz ; i++)
+    {
+        free(JACOBI.matrizA[i]);
+    }
+    free(JACOBI.matrizA);
+
 }
 
 int main(int argc, char** argv)
