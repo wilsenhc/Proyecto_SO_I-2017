@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <pthread.h>
-#define N 4
 
 struct {
     int dimensionMatriz;
