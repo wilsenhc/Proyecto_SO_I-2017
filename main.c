@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <pthread.h>
+#include <sys/time.h>
 
 struct {
     int dimensionMatriz;
@@ -109,46 +110,39 @@ void *operacion(void *F)
 
 void crear_hilos(int hilo)
 {
-    if(hilo == 2 || hilo == 4 || hilo == 8)
+    int *distancia;
+    int i,aux,V[2];
+    pthread_t *H;//Vector de Hilos
+
+    distancia = (int*)calloc(hilo+1,sizeof(int));
+    H = (pthread_t*)calloc(hilo,sizeof(pthread_t));
+    for(i = 0; i < hilo +1; i++)
     {
-        int *distancia;
-        int i,aux,V[2];
-        pthread_t *H;//Vector de Hilos
+        distancia[i] = 0;
+    }
 
-        distancia = (int*)calloc(hilo+1,sizeof(int));
-        H = (pthread_t*)calloc(hilo,sizeof(pthread_t));
-        for(i = 0; i < hilo +1; i++)
-        {
-            distancia[i] = 0;
-        }
-
-        if(H == NULL)
-        {
-            printf("Se jodio el hilo");
-        }
-        else
-        {
-            aux = JACOBI.dimensionMatriz/hilo;
-            distancia[0] = 0;
-            for(i = 1; i < hilo;i++)
-            {
-                distancia[i] = distancia[i-1] + aux;
-            }
-            distancia[hilo] = JACOBI.dimensionMatriz;
-            for(i = 0;i < hilo;i++)
-            {
-                V[0] = distancia[i];
-                V[1] = distancia[i+1];
-                pthread_create(&H[i], NULL, operacion, V);
-                pthread_join(H[i],NULL);
-            }
-            free(H);
-            free(distancia);   
-        }
+    if(H == NULL)
+    {
+        printf("Se jodio el hilo");
     }
     else
     {
-        printf("\nError verifique el numero de hilos\n");
+        aux = JACOBI.dimensionMatriz/hilo;
+        distancia[0] = 0;
+        for(i = 1; i < hilo;i++)
+        {
+            distancia[i] = distancia[i-1] + aux;
+        }
+        distancia[hilo] = JACOBI.dimensionMatriz;
+        for(i = 0;i < hilo;i++)
+        {
+            V[0] = distancia[i];
+            V[1] = distancia[i+1];
+            pthread_create(&H[i], NULL, operacion, V);
+            pthread_join(H[i],NULL);
+        }
+        free(H);
+        free(distancia);   
     }
 }
 
@@ -180,18 +174,18 @@ void jacobiIterativo(int hilo)
             JACOBI.vectorXInicial[j] = JACOBI.vectorX[j];
         }
 
-        printf("%2d", k);
+      /*  printf("%2d", k);
 
         for (int j = 0; j < JACOBI.dimensionMatriz; j++)
         {
             printf(" %f", JACOBI.vectorX[j]);
         }
-        printf("\n");
+        printf("\n");*/
 
         k++;
     }
 
-    if (k <= JACOBI.maximoIteraciones)
+    if (k <= JACOBI.maximoIteraciones && !band)
     {
         printf("Solucion encontrada en %d iteraciones\n", k);
     }
@@ -213,11 +207,14 @@ void jacobiIterativo(int hilo)
 
 int main(int argc, char** argv)
 {
-    int hilo = 2;
+    int hilo = 8;
+    struct timeval t, t2;
+    double microsegundos = 0e0;
+    gettimeofday(&t, NULL);
     lecturaJacobi();
-
-
     jacobiIterativo(hilo);
-
+    gettimeofday(&t2, NULL);
+    microsegundos = ((t2.tv_usec - t.tv_usec)  + ((t2.tv_sec - t.tv_sec) * 1000000.0f));
+    printf("\nel tiempo con %d hilos fue de %lf microsegundos \n",hilo,microsegundos);
     return 0;
 }
