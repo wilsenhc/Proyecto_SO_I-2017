@@ -1,6 +1,6 @@
 compilador = gcc
-MAIN = main.c
-ejecutable = p
+MAIN = jacobi.c
+ejecutable = JACOBI
 entrada = salida.txt
 salida = out.txt
 main2 = entradas.c
