@@ -28,7 +28,7 @@ struct Intervalo {
 };
 
 int NUM_THREADS;
-int *intervalos;
+struct Intervalo *intervalos;
 pthread_t *THREADS_ARR;
 
 /**
@@ -80,13 +80,14 @@ void lecturaJacobi()
         scanf(" %lf", &JACOBI.vectorB[i]);
     }
 
-    intervalos = (int *) calloc(NUM_THREADS + 1, sizeof(int));
-    intervalos[0] = 0;
-    intervalos[NUM_THREADS] = JACOBI.dimensionMatriz;
+    intervalos = (struct Intervalo *) calloc(NUM_THREADS, sizeof(struct Intervalo));
+    intervalos[0].min = 0;
+    intervalos[NUM_THREADS].max = JACOBI.dimensionMatriz;
 
-    for(int i = 1; i < NUM_THREADS; i++)
+    for(int i = 0; i < NUM_THREADS; i++)
     {
-        intervalos[i] = i * (JACOBI.dimensionMatriz / NUM_THREADS);
+        intervalos[i].max = (i+1) * (JACOBI.dimensionMatriz / NUM_THREADS);
+        intervalos[i + 1].min = (i+1) * (JACOBI.dimensionMatriz / NUM_THREADS);
     }
 }
 
@@ -118,11 +119,11 @@ double sumatoria(int i)
     return total;
 }
 
-void *operacion(void *F)
+void *operacion(void *args)
 {
-    struct Intervalo *i = (struct Intervalo*) F;
+    struct Intervalo *intervalo = (struct Intervalo *) args;
 
-    for(int j = i->min; j < i->max;j++)
+    for(int j = intervalo->min; j < intervalo->max; j++)
     {
         JACOBI.vectorX[j] = (1 / JACOBI.matrizA[j][j]) * (-1 * sumatoria(j) + JACOBI.vectorB[j]);
     }
@@ -144,11 +145,11 @@ void instanciar_hilos()
     {
         for(int i = 0; i < NUM_THREADS; i++)
         {
-            struct Intervalo intervals;
-            intervals.min = intervalos[i];
-            intervals.max = intervalos[i + 1];
+            pthread_create(&THREADS_ARR[i], NULL, operacion, &intervalos[i]);
+        }
 
-            pthread_create(&THREADS_ARR[i], NULL, operacion, &intervals);
+        for(int i = 0; i < NUM_THREADS; i++)
+        {
             pthread_join(THREADS_ARR[i], NULL);
         }
         free(THREADS_ARR);
@@ -235,7 +236,7 @@ int main(int argc, char** argv)
     gettimeofday(&t, NULL);
     jacobiIterativo();
     gettimeofday(&t2, NULL);
-    microsegundos = ((t2.tv_usec - t.tv_usec)  + ((t2.tv_sec - t.tv_sec) * 1000000.0f));
-    printf("\nEl tiempo con %d hilos fue de %lf microsegundos\n", NUM_THREADS, microsegundos);
+    microsegundos = ((t2.tv_usec - t.tv_usec) + ((t2.tv_sec - t.tv_sec) * 1e6));
+    printf("El tiempo con %d hilos fue de %lf segundos\n", NUM_THREADS, microsegundos/1e6);
     return 0;
 }
