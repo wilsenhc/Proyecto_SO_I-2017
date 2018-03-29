@@ -50,7 +50,7 @@ test_10000:
 	time ./$(MAIN_EJ) 4 < $(CASO10000)
 	time ./$(MAIN_EJ) 8 < $(CASO10000)
 
-clear:
+clean:
 	rm *.in
 	rm $(MAIN_EJ)
 	rm $(CASOS_EJ)
