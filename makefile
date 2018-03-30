@@ -19,10 +19,10 @@ compile: principal casos_prueba
 compile_test: debug generar_casos
 
 debug:
-	$(compilador) $(MAIN) -D DEBUG -g -o $(MAIN_EJ) -lm -l pthread -O3 -Wno-unused-result
+	$(compilador) $(MAIN) -D DEBUG -g -o $(MAIN_EJ) -lm -l pthread
 
 principal:
-	$(compilador) $(MAIN) -o $(MAIN_EJ) -lm -l pthread -O3 -Wno-unused-result
+	$(compilador) $(MAIN) -o $(MAIN_EJ) -lm -l pthread
 
 casos_prueba:
 	$(compilador) $(CASOS) -o $(CASOS_EJ) -lm
