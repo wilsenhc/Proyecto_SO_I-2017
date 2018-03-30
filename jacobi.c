@@ -331,6 +331,9 @@ int main(int argc, char** argv)
         printf("El tiempo de jacobi fue de\t%lf segundos\n", ejecucion/1e6);
         printf("EL tiempo de total fue de\t%lf segundos\n\n", total/1e6);
     #endif
-    imprimir();
+    #ifndef DEBUG
+        imprimir();
+    #endif
+    
     return 0;
 }
