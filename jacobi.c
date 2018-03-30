@@ -27,9 +27,16 @@ struct Intervalo {
     int max;
 };
 
-int NUM_THREADS;
+struct Matriz_Resultado
+{
+    double *vector;
+};
+
+int NUM_THREADS,aux;
 struct Intervalo *intervalos;
 pthread_t *THREADS_ARR;
+struct Matriz_Resultado *Resultado;
+int band = 0;
 
 /**
  * Lectura de archivo de entrada
@@ -91,6 +98,11 @@ void lecturaJacobi()
     }
 
     THREADS_ARR = (pthread_t *) calloc(NUM_THREADS, sizeof(pthread_t));
+    Resultado = (struct Matriz_Resultado *)calloc(JACOBI.maximoIteraciones,sizeof(struct Matriz_Resultado));
+}
+void crear_matriz()
+{
+    Resultado[aux].vector = (double*) calloc(JACOBI.dimensionMatriz, sizeof(double));
 }
 
 /**
@@ -138,18 +150,15 @@ void *pasoSeis(void *args)
 
     for(int j = intervalo->min; j < intervalo->max; j++)
     {
-        JACOBI.vectorXInicial[j] = JACOBI.vectorX[j];
+       JACOBI.vectorXInicial[j] = JACOBI.vectorX[j];
+       Resultado[aux].vector[j] = JACOBI.vectorX[j];
     }
 }
 
 void pasoTresConHilos()
 {
-    if(THREADS_ARR == NULL)
-    {
-        printf("Se jodio el hilo");
-    }
-    else
-    {
+    if(THREADS_ARR != NULL)
+    {       
         for(int i = 0; i < NUM_THREADS; i++)
         {
             pthread_create(&THREADS_ARR[i], NULL, pasoTres, &intervalos[i]);
@@ -175,6 +184,7 @@ void pasoSeisConHilos()
         {
             pthread_join(THREADS_ARR[i], NULL);
         }
+        
     }
 }
 
@@ -182,11 +192,10 @@ void pasoSeisConHilos()
  * Algoritmo 7.1 de Numerical Analysis por Burden & Faires
  * */
 void jacobi()
-{
-
+{    
     // PASO #1
-    int band = 0;
     int k = 0;
+    aux = k;
 
     // PASO #2
     while (k < JACOBI.maximoIteraciones)
@@ -197,7 +206,7 @@ void jacobi()
             pasoTresConHilos();
         }
         else
-        {
+        {            
             for (int i = 0; i < JACOBI.dimensionMatriz; i++)
             {
                 JACOBI.vectorX[i] = (1 / JACOBI.matrizA[i][i]) * (-1 * sumatoria(i) + JACOBI.vectorB[i]);
@@ -207,7 +216,7 @@ void jacobi()
         // PASO #4
         if (normaVector() < JACOBI.tolerancia)
         {
-            band = 1;//aqui se podria usar la bandera
+            printf("La solución para una tolerancia de %lf se obtuvo exitosamente en %d iteraciones.", JACOBI.tolerancia, k + 1);
             break;
         }
 
@@ -217,48 +226,78 @@ void jacobi()
         // PASO #6
         if (NUM_THREADS > 1)
         {
+            //auxiliar para guardar la iteracion actual, lo declare global
+            crear_matriz();
             pasoSeisConHilos();
         }
         else
         {
+            crear_matriz();
             for(int j = 0; j < JACOBI.dimensionMatriz; j++)
             {
                 JACOBI.vectorXInicial[j] = JACOBI.vectorX[j];
+                Resultado[aux].vector[j] = JACOBI.vectorX[j];
             }
         }
+        //auxiliar para guardar la iteracion actual, lo declare global
+        aux++;
 
     }
 
     // PASO #7
-    if (k <= JACOBI.maximoIteraciones && !band)
-    {
-        printf("Solucion encontrada en %d iteraciones\n", k);
-    }
-    else
+    if (k >= JACOBI.maximoIteraciones)
     {
         printf("Se excedio de el numero de iteraciones\n");
+        band = 1;
     }
 }
 
 void liberarMemoria()
 {
+    for(int i = 0; i < JACOBI.maximoIteraciones; i++)
+    {
+        free(Resultado[i].vector);
+    }
+
     for(int i = 0; i < JACOBI.dimensionMatriz ; i++)
     {
         free(JACOBI.matrizA[i]);
     }
-
+    free(JACOBI.matrizA);
     free(JACOBI.vectorB);
     free(JACOBI.vectorX);
     free(JACOBI.vectorXInicial);
-    free(JACOBI.matrizA);
     free(intervalos);
     free(THREADS_ARR);
 }
 
+void imprimir()
+{
+    if(!band)
+    {
+        printf("La solución para una tolerancia de %lf se obtuvo exitosamente en %d iteraciones. Los valores obtenidos son:\n\n",JACOBI.tolerancia,aux);
+       for(int i = 0; i < aux ; i++)
+        {
+            printf("%d \t",i+1);
+            for(int j = 0; j < JACOBI.dimensionMatriz ; j++)
+            {
+                printf("%lf   ",Resultado[i].vector[j]);
+            }
+            printf("\n");
+        }
+        printf("\n\n");
+    }
+    liberarMemoria();
+}
+
 int main(int argc, char** argv)
 {
-    struct timeval t, t2;
-    double microsegundos = 0e0;
+    #ifdef DEBUG
+        struct timeval t1, t2, t3;
+        double ejecucion = 0e0;
+        double lectura = 0e0;
+        double total = 0e0;
+    #endif
 
     /**
      * Verificar si se especifica una cantidad de hilos,
@@ -270,12 +309,28 @@ int main(int argc, char** argv)
         NUM_THREADS = 1;
     }
 
+    #ifdef DEBUG
+        printf("==== Con %d hilo(s) ====\n", NUM_THREADS);
+        gettimeofday(&t1, NULL);
+    #endif
+
     lecturaJacobi();
 
-    gettimeofday(&t, NULL);
+    #ifdef DEBUG
+        gettimeofday(&t2, NULL);
+    #endif
+
     jacobi();
-    gettimeofday(&t2, NULL);
-    microsegundos = ((t2.tv_usec - t.tv_usec) + ((t2.tv_sec - t.tv_sec) * 1e6));
-    printf("El tiempo con %d hilos fue de %lf segundos\n", NUM_THREADS, microsegundos/1e6);
+
+    #ifdef DEBUG
+        gettimeofday(&t3, NULL);
+        lectura = ((t2.tv_usec - t1.tv_usec) + ((t2.tv_sec - t1.tv_sec) * 1e6));
+        ejecucion = ((t3.tv_usec - t2.tv_usec) + ((t3.tv_sec - t2.tv_sec) * 1e6));
+        total = ((t3.tv_usec - t1.tv_usec) + ((t3.tv_sec - t1.tv_sec) * 1e6));
+        printf("EL tiempo de lectura fue de\t%lf segundos\n", lectura/1e6);
+        printf("El tiempo de jacobi fue de\t%lf segundos\n", ejecucion/1e6);
+        printf("EL tiempo de total fue de\t%lf segundos\n\n", total/1e6);
+    #endif
+    imprimir();
     return 0;
 }
