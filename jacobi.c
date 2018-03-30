@@ -144,11 +144,7 @@ void *pasoSeis(void *args)
 
 void pasoTresConHilos()
 {
-    if(THREADS_ARR == NULL)
-    {
-        printf("Se jodio el hilo");
-    }
-    else
+    if(THREADS_ARR != NULL)
     {
         for(int i = 0; i < NUM_THREADS; i++)
         {
@@ -183,9 +179,7 @@ void pasoSeisConHilos()
  * */
 void jacobi()
 {
-
     // PASO #1
-    int band = 0;
     int k = 0;
 
     // PASO #2
@@ -207,6 +201,7 @@ void jacobi()
         // PASO #4
         if (normaVector() < JACOBI.tolerancia)
         {
+            printf("La solución para una tolerancia de %lf se obtuvo exitosamente en %d iteraciones.", JACOBI.tolerancia, k + 1);
             break;
         }
 
@@ -229,11 +224,7 @@ void jacobi()
     }
 
     // PASO #7
-    if (k <= JACOBI.maximoIteraciones && !band)
-    {
-        printf("Solucion encontrada en %d iteraciones\n", k);
-    }
-    else
+    if (k >= JACOBI.maximoIteraciones)
     {
         printf("Se excedio de el numero de iteraciones\n");
     }
@@ -246,18 +237,22 @@ void liberarMemoria()
         free(JACOBI.matrizA[i]);
     }
 
+    free(JACOBI.matrizA);
     free(JACOBI.vectorB);
     free(JACOBI.vectorX);
     free(JACOBI.vectorXInicial);
-    free(JACOBI.matrizA);
     free(intervalos);
     free(THREADS_ARR);
 }
 
 int main(int argc, char** argv)
 {
-    struct timeval t, t2;
-    double microsegundos = 0e0;
+    #ifdef DEBUG
+        struct timeval t1, t2, t3;
+        double ejecucion = 0e0;
+        double lectura = 0e0;
+        double total = 0e0;
+    #endif
 
     /**
      * Verificar si se especifica una cantidad de hilos,
@@ -269,12 +264,28 @@ int main(int argc, char** argv)
         NUM_THREADS = 1;
     }
 
+    #ifdef DEBUG
+        printf("==== Con %d hilo(s) ====\n", NUM_THREADS);
+        gettimeofday(&t1, NULL);
+    #endif
+
     lecturaJacobi();
 
-    gettimeofday(&t, NULL);
+    #ifdef DEBUG
+        gettimeofday(&t2, NULL);
+    #endif
+
     jacobi();
-    gettimeofday(&t2, NULL);
-    microsegundos = ((t2.tv_usec - t.tv_usec) + ((t2.tv_sec - t.tv_sec) * 1e6));
-    printf("El tiempo con %d hilos fue de %lf segundos\n", NUM_THREADS, microsegundos/1e6);
+
+    #ifdef DEBUG
+        gettimeofday(&t3, NULL);
+        lectura = ((t2.tv_usec - t1.tv_usec) + ((t2.tv_sec - t1.tv_sec) * 1e6));
+        ejecucion = ((t3.tv_usec - t2.tv_usec) + ((t3.tv_sec - t2.tv_sec) * 1e6));
+        total = ((t3.tv_usec - t1.tv_usec) + ((t3.tv_sec - t1.tv_sec) * 1e6));
+        printf("EL tiempo de lectura fue de\t%lf segundos\n", lectura/1e6);
+        printf("El tiempo de jacobi fue de\t%lf segundos\n", ejecucion/1e6);
+        printf("EL tiempo de total fue de\t%lf segundos\n\n", total/1e6);
+    #endif
+
     return 0;
 }
