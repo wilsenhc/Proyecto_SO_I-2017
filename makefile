@@ -31,7 +31,7 @@ generar_casos: casos_prueba
 	./$(CASOS_EJ) 10 > caso10.in
 	./$(CASOS_EJ) 100 > caso100.in
 	./$(CASOS_EJ) 1000 > caso1000.in
-	#./$(CASOS_EJ) 10000 > caso10000.in
+	./$(CASOS_EJ) 10000 > caso10000.in
 
 test_enunciado:
 	./$(MAIN_EJ) 1 < $(CASOENUNCIADO)
