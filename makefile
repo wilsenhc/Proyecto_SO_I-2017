@@ -15,6 +15,11 @@ all: compile
 
 compile: principal casos_prueba
 
+test: debug generar_casos
+
+debug:
+	$(compilador) $(MAIN) -D DEBUG -g -o $(MAIN_EJ) -lm -l pthread -O3 -Wno-unused-result
+
 principal:
 	$(compilador) $(MAIN) -o $(MAIN_EJ) -lm -l pthread -O3 -Wno-unused-result
 
@@ -28,27 +33,27 @@ generar_casos: casos_prueba
 	./$(CASOS_EJ) 10000 > caso10000.in
 
 test_10:
-	time ./$(MAIN_EJ) 1 < $(CASO10)
-	time ./$(MAIN_EJ) 2 < $(CASO10)
-	time ./$(MAIN_EJ) 4 < $(CASO10)
+	./$(MAIN_EJ) 1 < $(CASO10)
+	./$(MAIN_EJ) 2 < $(CASO10)
+	./$(MAIN_EJ) 4 < $(CASO10)
 
 test_100:
-	time ./$(MAIN_EJ) 1 < $(CASO100)
-	time ./$(MAIN_EJ) 2 < $(CASO100)
-	time ./$(MAIN_EJ) 4 < $(CASO100)
-	time ./$(MAIN_EJ) 8 < $(CASO100)
+	./$(MAIN_EJ) 1 < $(CASO100)
+	./$(MAIN_EJ) 2 < $(CASO100)
+	./$(MAIN_EJ) 4 < $(CASO100)
+	./$(MAIN_EJ) 8 < $(CASO100)
 
 test_1000:
-	time ./$(MAIN_EJ) 1 < $(CASO1000)
-	time ./$(MAIN_EJ) 2 < $(CASO1000)
-	time ./$(MAIN_EJ) 4 < $(CASO1000)
-	time ./$(MAIN_EJ) 8 < $(CASO1000)
+	./$(MAIN_EJ) 1 < $(CASO1000)
+	./$(MAIN_EJ) 2 < $(CASO1000)
+	./$(MAIN_EJ) 4 < $(CASO1000)
+	./$(MAIN_EJ) 8 < $(CASO1000)
 
 test_10000:
-	time ./$(MAIN_EJ) 1 < $(CASO10000)
-	time ./$(MAIN_EJ) 2 < $(CASO10000)
-	time ./$(MAIN_EJ) 4 < $(CASO10000)
-	time ./$(MAIN_EJ) 8 < $(CASO10000)
+	./$(MAIN_EJ) 1 < $(CASO10000)
+	./$(MAIN_EJ) 2 < $(CASO10000)
+	./$(MAIN_EJ) 4 < $(CASO10000)
+	./$(MAIN_EJ) 8 < $(CASO10000)
 
 clean:
 	rm *.in
