@@ -207,6 +207,7 @@ void jacobi()
         // PASO #4
         if (normaVector() < JACOBI.tolerancia)
         {
+            band = 1;//aqui se podria usar la bandera
             break;
         }
 
