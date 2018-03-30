@@ -3,8 +3,8 @@ MAIN = jacobi.c
 MAIN_EJ = JACOBI
 entrada = caso10000.in
 salida = out.txt
-CASOS = entradas.c
-CASOS_EJ = CASOS
+CASOS = generador.c
+CASOS_EJ = GENERADOR
 
 CASOENUNCIADO = casoEnunciado.txt
 CASO10 = caso10.in
