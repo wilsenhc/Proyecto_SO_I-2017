@@ -6,6 +6,7 @@ salida = out.txt
 CASOS = entradas.c
 CASOS_EJ = CASOS
 
+CASOENUNCIADO = casoEnunciado.txt
 CASO10 = caso10.in
 CASO100 = caso100.in
 CASO1000 = caso1000.in
@@ -15,7 +16,7 @@ all: compile
 
 compile: principal casos_prueba
 
-test: debug generar_casos
+compile_test: debug generar_casos
 
 debug:
 	$(compilador) $(MAIN) -D DEBUG -g -o $(MAIN_EJ) -lm -l pthread -O3 -Wno-unused-result
@@ -31,6 +32,11 @@ generar_casos: casos_prueba
 	./$(CASOS_EJ) 100 > caso100.in
 	./$(CASOS_EJ) 1000 > caso1000.in
 	./$(CASOS_EJ) 10000 > caso10000.in
+
+test_enunciado:
+	./$(MAIN_EJ) 1 < $(CASOENUNCIADO)
+	./$(MAIN_EJ) 2 < $(CASOENUNCIADO)
+	./$(MAIN_EJ) 4 < $(CASOENUNCIADO)
 
 test_10:
 	./$(MAIN_EJ) 1 < $(CASO10)
