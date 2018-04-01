@@ -1,0 +1,31 @@
+Num hilos:	1
+Iteraciones:	25
+Tamaño matriz:	10000
+Lectura:	27.069871 seg
+Jacobi:		10.383626 seg
+Total:		37.453497 seg
+
+./JACOBI 2 < caso10000.in
+Num hilos:	2
+Iteraciones:	25
+Tamaño matriz:	10000
+Lectura:	25.433955 seg
+Jacobi:		5.252375 seg
+Total:		30.686330 seg
+
+./JACOBI 4 < caso10000.in
+Num hilos:	4
+Iteraciones:	25
+Tamaño matriz:	10000
+Lectura:	24.769224 seg
+Jacobi:		3.757270 seg
+Total:		28.526494 seg
+
+./JACOBI 8 < caso10000.in
+Num hilos:	8
+Iteraciones:	25
+Tamaño matriz:	10000
+Lectura:	26.039797 seg
+Jacobi:		2.526164 seg
+Total:		28.565961 seg
+

@@ -1,0 +1,127 @@
+============================Test_enunciado====================================
+Num hilos:	1
+Iteraciones:	16
+Tamaño matriz:	4
+Lectura:	0.000034 seg
+Jacobi:		0.000020 seg
+Total:		0.000054 seg
+==============================================================================
+Num hilos:	2
+Iteraciones:	16
+Tamaño matriz:	4
+Lectura:	0.000029 seg
+Jacobi:		0.001470 seg
+Total:		0.001499 seg
+==============================================================================
+Num hilos:	4
+Iteraciones:	16
+Tamaño matriz:	4
+Lectura:	0.000028 seg
+Jacobi:		0.002153 seg
+Total:		0.002181 seg
+============================Test_10===========================================
+Num hilos:	1
+Iteraciones:	11
+Tamaño matriz:	10
+Lectura:	0.000059 seg
+Jacobi:		0.000025 seg
+Total:		0.000084 seg
+==============================================================================
+Num hilos:	2
+Iteraciones:	11
+Tamaño matriz:	10
+Lectura:	0.000044 seg
+Jacobi:		0.000889 seg
+Total:		0.000933 seg
+==============================================================================
+Num hilos:	4
+Iteraciones:	9
+Tamaño matriz:	10
+Lectura:	0.000046 seg
+Jacobi:		0.002271 seg
+Total:		0.002317 seg
+============================Test_100==========================================
+Num hilos:	1
+Iteraciones:	14
+Tamaño matriz:	100
+Lectura:	0.002557 seg
+Jacobi:		0.001083 seg
+Total:		0.003640 seg
+==============================================================================
+Num hilos:	2
+Iteraciones:	14
+Tamaño matriz:	100
+Lectura:	0.002256 seg
+Jacobi:		0.002258 seg
+Total:		0.004514 seg
+==============================================================================
+Num hilos:	4
+Iteraciones:	14
+Tamaño matriz:	100
+Lectura:	0.002348 seg
+Jacobi:		0.004647 seg
+Total:		0.006995 seg
+==============================================================================
+Num hilos:	8
+Iteraciones:	14
+Tamaño matriz:	100
+Lectura:	0.002243 seg
+Jacobi:		0.006364 seg
+Total:		0.008607 seg
+============================Test_1000=========================================
+Num hilos:	1
+Iteraciones:	13
+Tamaño matriz:	1000
+Lectura:	0.238749 seg
+Jacobi:		0.095149 seg
+Total:		0.333898 seg
+==============================================================================
+Num hilos:	2
+Iteraciones:	13
+Tamaño matriz:	1000
+Lectura:	0.237118 seg
+Jacobi:		0.050547 seg
+Total:		0.287665 seg
+==============================================================================
+Num hilos:	4
+Iteraciones:	13
+Tamaño matriz:	1000
+Lectura:	0.231326 seg
+Jacobi:		0.054017 seg
+Total:		0.285343 seg
+==============================================================================
+Num hilos:	8
+Iteraciones:	13
+Tamaño matriz:	1000
+Lectura:	0.232847 seg
+Jacobi:		0.067612 seg
+Total:		0.300459 seg
+============================Test_10000========================================
+Num hilos:	1
+Iteraciones:	11
+Tamaño matriz:	10000
+Lectura:	23.697220 seg
+Jacobi:		7.954502 seg
+Total:		31.651722 seg
+==============================================================================
+Num hilos:	2
+Iteraciones:	11
+Tamaño matriz:	10000
+Lectura:	23.425157 seg
+Jacobi:		4.032281 seg
+Total:		27.457438 seg
+==============================================================================
+Num hilos:	4
+Iteraciones:	11
+Tamaño matriz:	10000
+Lectura:	23.992474 seg
+Jacobi:		4.148072 seg
+Total:		28.140546 seg
+==============================================================================
+Num hilos:	8
+Iteraciones:	11
+Tamaño matriz:	10000
+Lectura:	24.244189 seg
+Jacobi:		4.058290 seg
+Total:		28.302479 seg
+
